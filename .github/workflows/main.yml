@@ -17,7 +17,12 @@ jobs:
       - name: Install Flet
         run: pip install -r requirements.txt
       - name: Build app (Mac ARM)
-        run: flet pack src/main.py --distpath dist/macos-arm64
+        run: flet pack main.py --name "SP555Converter" --product-name "SP-555 Конвертор" --icon assets/icon.png --distpath dist/macos-arm64
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-arm64-build
+          path: dist/macos-arm64/
 
   build-macos-x86:
     runs-on: macos-13
@@ -26,7 +31,12 @@ jobs:
       - name: Set arch to x86_64
         run: |
           export ARCHFLAGS="-arch x86_64"
-          arch -x86_64 /bin/bash -c "python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && flet pack src/main.py --distpath dist/macos-x86_64"
+          arch -x86_64 /bin/bash -c "python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && flet pack src/main.py --name "SP555Converter" --product-name "SP-555 Конвертор" --icon assets/icon.png --distpath dist/macos-x86_64"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-x_86-build
+          path: dist/macos-x_86-build/
   
   build-windows:
     runs-on: windows-latest
@@ -39,4 +49,9 @@ jobs:
       - name: Install Flet
         run: pip install -r requirements.txt
       - name: Build app (Windows)
-        run: flet pack src/main.py --distpath dist/windows
+        run: flet pack src/main.py --name "SP555Converter" --product-name "SP-555 Конвертор" --icon assets/icon.png --distpath dist/windows
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: dist/windows/
