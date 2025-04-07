@@ -1,0 +1,42 @@
+name: Build Flet App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-macos-arm:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install Flet
+        run: pip install flet
+      - name: Build app (Mac ARM)
+        run: flet pack main.py --distpath dist/macos-arm64
+
+  build-macos-x86:
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set arch to x86_64
+        run: |
+          export ARCHFLAGS="-arch x86_64"
+          arch -x86_64 /bin/bash -c "python3 -m venv venv && source venv/bin/activate && pip install flet && flet pack main.py --distpath dist/macos-x86_64"
+  
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install Flet
+        run: pip install flet
+      - name: Build app (Windows)
+        run: flet pack main.py --distpath dist/windows
